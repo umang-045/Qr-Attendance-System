@@ -1,0 +1,158 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #F4F7F9;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.title {
+    padding: 10px;
+    text-align: center;
+}
+
+h1 {
+    color: rgb(17, 17, 17);
+    font-size: 32px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+    color: rgb(17, 17, 17);
+
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 90vw;
+}
+
+.tabs {
+    background-color: white;
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    border-radius: 10px;
+    margin: 5px;
+
+}
+
+.tab_button {
+    font-size: 15px;
+    font-weight: bold;
+    min-width: 150px;
+    padding: 15px 100px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+.tab_button:hover {
+    transform: translateY(-3px);
+    box-shadow: 2px 2px rgb(53, 56, 58);
+    cursor: pointer;
+}
+
+.tab_content {
+    display: none;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    min-height: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.tab_content.active {
+    display: block;
+}
+
+label {
+    display: block;
+    margin-top: 8px;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+.select{
+    display: block;
+    background-color:#f8f9fa;
+    margin-top:20px;
+}
+.register_form {
+    margin-bottom: 20px;
+}
+
+.submit_button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#startScanner,
+#stopScanner,
+#Qr_generate {
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+#qrcode img {
+    margin: 0 auto;
+    display: block;
+}
+
+.studentInfo {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.instruction{
+    display: block;
+    background-color: #f8f9fa ;
+    border: 2px solid transparent;
+    border-left-color: #333;
+    padding:15px;
+    margin-top:15px;
+}
+#noRecordsMsg{
+    font-size: 20px;
+    margin-top: 15px;
+}
