@@ -115,50 +115,82 @@ document.getElementById('startScanner').addEventListener('click',()=>{
     startScanner();
     document.getElementById('startScanner').style.display='none';
     document.getElementById('stopScanner').style.display='block';
-})
+});
 
+
+let html5QrCode;
 let attendanceRecords = [];
-let html5QrcodeScanner;
 
-function startScanner() {
-    html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
-    
-    html5QrcodeScanner.render((decodedText) => {
-        try {
-            const data = JSON.parse(decodedText);
-            if (data.type === 'attendance') {
-                const isAlreadyMarked = attendanceRecords.some(record => record.id === data.id);
-                if (isAlreadyMarked) {
-                    stopScanner();
-                    setTimeout(() => {
-                        alert(`Attendance already marked for ${data.name} today.`);
-                    }, 100);
-                    return;
-                }
+async function startScanner() {
+    // 1. Toggle UI Buttons
+    document.getElementById('startScanner').style.display = 'none';
+    document.getElementById('stopScanner').style.display = 'block';
+
+    // 2. Initialize the scanner if it doesn't exist
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+    }
+
+    const config = { 
+        fps: 10, 
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0 
+    };
+
+    try {
+        // 3. Explicitly start using the rear camera ("environment")
+        await html5QrCode.start(
+            { facingMode: "environment" }, 
+            config, 
+            onScanSuccess
+        );
+    } catch (err) {
+        console.error("Scanner failed", err);
+        // Fallback to any available camera (like front camera on laptop)
+        html5QrCode.start({ facingMode: "user" }, config, onScanSuccess)
+            .catch(err2 => alert("Camera error: " + err2));
+    }
+}
+
+function stopScanner() {
+    if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => {
+            document.getElementById('stopScanner').style.display = 'none';
+            document.getElementById('startScanner').style.display = 'block';
+            // Clear the reader element manually
+            document.getElementById('reader').innerHTML = "";
+        }).catch(err => console.error("Failed to stop", err));
+    }
+}
+
+function onScanSuccess(decodedText) {
+    try {
+        const data = JSON.parse(decodedText);
+        
+        if (data.type === 'attendance') {
+            const isAlreadyMarked = attendanceRecords.some(record => record.id === data.id);
+            
+            if (isAlreadyMarked) {
+                stopScanner();
+                alert(`Attendance already marked for ${data.name} today.`);
+            } else {
                 attendanceRecords.push({
                     id: data.id,
                     name: data.name,
                     time: new Date().toLocaleString()
                 });
                 stopScanner();
-                setTimeout(() => {
-                    alert(`Attendance marked for ${data.name}`);
-                }, 100);
+                alert(`Attendance marked for ${data.name}`);
             }
-        } catch (e) {
-            stopScanner();
-            alert("This QR code is not recognized by the Attendance System.");
         }
-    });
+    } catch (e) {
+        stopScanner();
+        alert("This QR code is not recognized by the Attendance System.");
+    }
 }
-document.getElementById('stopScanner').addEventListener('click',()=>{
-    stopScanner();
-})
-function stopScanner(){
-    html5QrcodeScanner.clear(); 
-    document.getElementById('stopScanner').style.display = 'none';
-    document.getElementById('startScanner').style.display = 'block';
-}
+
+document.getElementById('startScanner').onclick = startScanner;
+document.getElementById('stopScanner').onclick = stopScanner;
 function displayAttendanceRecords() {
     const tableBody = document.getElementById('attendanceBody');
     const tableElement = document.getElementById('recordsTable');
